@@ -51,6 +51,7 @@ class GameObject:
     def draw(self):
         """заготовку метода для отрисовки объекта"""
         raise NotImplementedError()
+
     def body(self, position, surface):
         """тело змеи или яблока"""
         rect = (
@@ -60,10 +61,10 @@ class GameObject:
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
     def head(self, positions, surface):
+        """Голова змеи"""
         head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, self.body_color, head_rect)
         pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
-
 
 
 class Snake(GameObject):
