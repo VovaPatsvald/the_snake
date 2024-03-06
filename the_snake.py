@@ -52,15 +52,17 @@ class GameObject:
         """заготовку метода для отрисовки объекта"""
         raise NotImplementedError()
 
-    def draw_cell(self, positions, surface):
+    def draw_body(self, position, surface):
         """тело змеи или яблока"""
+        """Можно подсказку насчет параметра"""
         rect = (
-            pygame.Rect((self.position[0],
-                         self.position[1]), (GRID_SIZE, GRID_SIZE))
+            pygame.Rect((position[0], position[1]), (GRID_SIZE, GRID_SIZE))
         )
         pygame.draw.rect(surface, self.body_color, rect)
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
+    def draw_head(self, positions, surface):
+        """Голова змеи"""
         head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, self.body_color, head_rect)
         pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
@@ -118,9 +120,9 @@ class Snake(GameObject):
     def draw(self, surface):
         """отрисовывает змейку"""
         for position in self.positions[:-1]:
-            self.draw_cell(position, surface)
+            self.draw_body(position, surface)
 
-        self.draw_cell(self.positions, surface)
+        self.draw_head(self.positions, surface)
 
         if self.last:
             last_rect = pygame.Rect(
@@ -148,7 +150,7 @@ class Apple(GameObject):
 
     def draw(self, surface):
         """отрисовывает яблоко"""
-        self.draw_cell(self.position, surface)
+        self.draw_body(self.position, surface)
 
 
 def handle_keys(game_object):
