@@ -52,16 +52,14 @@ class GameObject:
         """заготовку метода для отрисовки объекта"""
         raise NotImplementedError()
 
-    def body(self, position, surface):
+    def draw_cell(self, positions, surface):
         """тело змеи или яблока"""
         rect = (
-            pygame.Rect((position[0], position[1]), (GRID_SIZE, GRID_SIZE))
+            pygame.Rect((self.position[0], self.position[1]), (GRID_SIZE, GRID_SIZE))
         )
         pygame.draw.rect(surface, self.body_color, rect)
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
-    def head(self, positions, surface):
-        """Голова змеи"""
         head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, self.body_color, head_rect)
         pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
@@ -74,7 +72,6 @@ class Snake(GameObject):
         super().__init__(body_color)
         self.positions = [self.position]
         self.next_direction = None
-
         self.last = None
         self.direction = RIGHT
         self.length = 1
@@ -91,13 +88,11 @@ class Snake(GameObject):
 
     def reset(self):
         """сбрасывает змейку после столкновения с собой"""
-        if self.length > 1:
-            if self.positions[0] in self.positions[1:]:
-                self.direction = RIGHT
-                self.last = None
-                self.positions = [self.position]
-                self.length = 1
-                screen.fill(BOARD_BACKGROUND_COLOR)
+        self.direction = RIGHT
+        self.last = None
+        self.positions = [self.position]
+        self.length = 1
+        screen.fill(BOARD_BACKGROUND_COLOR)
 
     def update_direction(self):
         """обновляет направление движения"""
@@ -122,9 +117,9 @@ class Snake(GameObject):
     def draw(self, surface):
         """отрисовывает змейку"""
         for position in self.positions[:-1]:
-            self.body(position, surface)
+            self.draw_cell(position, surface)
 
-        self.head(self.positions, surface)
+        self.draw_cell(self.positions, surface)
 
         if self.last:
             last_rect = pygame.Rect(
@@ -152,7 +147,7 @@ class Apple(GameObject):
 
     def draw(self, surface):
         """отрисовывает яблоко"""
-        self.body(self.position, surface)
+        self.draw_cell(self.position, surface)
 
 
 def handle_keys(game_object):
@@ -184,8 +179,8 @@ def main():
         handle_keys(snake)
         snake.update_direction()
         snake.move()
-        snake.get_head_position
-        snake.reset()
+        snake.get_head_position()
+        snake.collision()
         apple.draw(screen)
         snake.draw(screen)
 
